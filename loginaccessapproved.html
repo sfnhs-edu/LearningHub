@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+
+if(sessionStorage.getItem("loggedIn") !== "true"){
+    window.location.href = "index.html";
+}
+
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SFNHS Learning Hub</title>
@@ -424,10 +431,17 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const studentName = localStorage.getItem("studentName");
+    if(sessionStorage.getItem("loggedIn") !== "true"){
+        window.location.href = "index.html";
+        return;
+    }
+
+    const studentName = sessionStorage.getItem("studentName");
 
     if(studentName){
         document.getElementById("studentName").textContent = studentName;
+    } else {
+        window.location.href = "index.html";
     }
 
 });
