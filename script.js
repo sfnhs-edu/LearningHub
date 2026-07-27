@@ -6,10 +6,16 @@ const validStudents = {
   "05040302": "Ernesto Dela Cruz",
 };
 
-// ADMIN ACCOUNTS
-const adminAccounts = {
+// ADMIN ACCOUNTS: ID : Password
+const adminPasswords = {
   "06211993": "kuramog25",
   "02092006": "JhnRy@1437"
+};
+
+// ADMIN NAMES: ID : Name
+const adminNames = {
+  "06211993": "Michael Molina",
+  "02092006": "John Rey Balasta"
 };
 
 function validateLogin() {
@@ -17,11 +23,11 @@ function validateLogin() {
   const password = document.getElementById("password").value.trim();
 
   // 1. CHECK ADMIN FIRST
-  if (adminAccounts.hasOwnProperty(studentId)) {
-    if (adminAccounts[studentId] === password) {
+  if (adminPasswords.hasOwnProperty(studentId)) {
+    if (adminPasswords[studentId] === password) {
       sessionStorage.setItem("loggedIn", "true");
       sessionStorage.setItem("studentID", studentId);
-      sessionStorage.setItem("studentName", "Admin");
+      sessionStorage.setItem("studentName", adminNames[studentId]); // now shows real admin name
       showOverlay(); // SHOW POPUP FOR ADMIN
       return;
     } else {
