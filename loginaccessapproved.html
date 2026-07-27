@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
 <script>
  if(sessionStorage.getItem("loggedIn") !== "true"){
-   window.location.href = "index.html";
+   // window.location.href = "index.html";
  }
 </script>
 <meta charset="UTF-8">
@@ -17,13 +38,12 @@
  .page-wrapper{ flex:1; min-height:100vh; background:#f4f4f4; transition: margin-left .4s ease; overflow-y:auto; padding-top: 80px; }
  .page-wrapper.shifted{ margin-left: 420px; }
  .overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.25); backdrop-filter:blur(3px); opacity:0; visibility:hidden; transition:0.35s ease; z-index:999; display:none; }
- /* SIDEBAR */
  .sidebar{ position:fixed; top:0; left:0; width:45%; min-width:320px; max-width:420px; height:100vh; overflow-y:auto; background:#0a4d1c; color:#fff; z-index:1000; transform:translateX(-100%); transition:transform .4s ease; padding:18px 28px; }
  .sidebar.show{ transform:translateX(0); }
  .back-btn{ background:none; border:none; color:white; font-size:32px; cursor:pointer; margin-bottom:12px; display:block; }
  .logo{ text-align:center; margin:8px 0 25px; }
  .logo img{ width:190px; max-width:85%; }
- .welcome-side{ color:white; text-align:center; margin:0 0 40px; font-size:16px; font-weight:bold; white-space:nowrap; text-transform: uppercase; } /* removed italic */
+ .welcome-side{ color:white; text-align:center; margin:0 0 40px; font-size:16px; font-weight:bold; white-space:nowrap; text-transform: uppercase; }
  .menu{ padding:0; }
  .menu-item, .dropdown-button{ width:100%; display:flex; justify-content:space-between; align-items:center; color:white; background:none; border:none; text-decoration:none; font-size:15px; font-weight:bold; cursor:pointer; padding:12px 0; text-align:left; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; font-family: Cambria, Georgia, serif; }
  .menu-item:hover, .dropdown-button:hover{ opacity:0.85; }
@@ -32,17 +52,30 @@
  .dropdown-content a{ display:block; color:white; text-decoration:none; font-size:14px; font-style:italic; font-weight:400; padding:8px 0; text-transform:none; white-space:nowrap; font-family: Cambria, Georgia, serif; }
  .arrow{ font-size:12px; transition:.3s ease; margin-left:8px; }
  .arrow.rotate{ transform:rotate(180deg); }
- /* HEADER - FIXED */
  .header{ background:#145d23; border-bottom:6px solid #c3c9bf; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:18px 30px; position: fixed; top: 0; left: 0; right: 0; z-index: 998; height: 80px; }
  .header h1{ font-size:1.7rem; font-weight:bold; }
  .header i{ font-size:1.8rem; cursor:pointer; }
- /* MAIN */
  .container{ width:90%; max-width:1400px; margin:auto; padding:50px 0; }
- .welcome{ text-align:center; font-size:.95rem; font-weight:bold; margin-bottom:25px; color:#145d23; } /* removed italic */
- .intro{ text-align:center; font-style:italic; color:#34684c; line-height:1.8; font-size:.85rem; max-width:700px; margin:auto; }
+ .welcome{ text-align:center; font-size:.95rem; font-weight:bold; margin-bottom:25px; color:#145d23; font-style: normal; }
  .divider{ width:100%; height:3px; background:#b9c1b2; margin:40px auto 35px; }
- 
- /* DROPDOWN SECTION STYLE */
+ .divider-thin{ width:100%; height:2px; background:#b9c1b2; margin:25px auto; }
+ .carousel-wrapper{ width:100%; margin: 0 auto 10px auto; display:none; }
+ .carousel-wrapper.has-images{ display:block; }
+ .carousel-viewport{ position:relative; width:100%; aspect-ratio: 16/9; max-height: 480px; overflow:hidden; background:#0e4d1f; border: 1px solid #0e4d1f; }
+ .carousel-track{ display:flex; height:100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+ .carousel-slide{ min-width:100%; height:100%; position:relative; flex-shrink:0; }
+ .carousel-slide img{ width:100%; height:100%; object-fit:cover; display:block; }
+ .carousel-dots{ display:flex; justify-content:center; gap:8px; margin:18px 0 5px; }
+ .carousel-dot{ width:12px; height:12px; border-radius:50%; background:#b8c4b3; cursor:pointer; transition: all .3s ease; border:none; }
+ .carousel-dot.active{ background:#145d23; transform: scale(1.15); }
+ .carousel-btn{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.35); color:white; border:none; width:38px; height:38px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; z-index:2; }
+ .carousel-btn:hover{ background:rgba(0,0,0,0.6); }
+ .carousel-btn.prev{ left:12px; }
+ .carousel-btn.next{ right:12px; }
+ .calendar-section{ width:100%; margin:0 auto; text-align:center; }
+ .calendar-title{ font-size:1.25rem; font-weight:bold; color:#1a4d24; letter-spacing:0.5px; margin-bottom:18px; text-transform:uppercase; }
+ .calendar-frame-wrap{ border:1.5px solid #a8c0a0; border-radius:12px; overflow:hidden; background:#eef3ed; padding:4px; }
+ .calendar-frame-wrap iframe{ width:100%; height:600px; border:0; display:block; border-radius:8px; background:white; }
  .resource-dropdown{ margin-bottom:20px; background:#ececec; border-radius:12px; overflow:hidden; transition: box-shadow .3s ease; }
  .resource-dropdown:hover{ box-shadow: 0 4px 12px rgba(20,93,35,0.1); }
  .resource-dropdown-header{ font-size:1rem; font-weight:bold; color:#145d23; padding:20px 25px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; background:#ececec; transition: background .3s ease; }
@@ -80,11 +113,12 @@
    .single-center .resource-btn{ width:100%; } 
    .footer-top{ flex-direction:column; text-align:center; } 
    .footer-logo{ margin:auto; } 
+   .calendar-frame-wrap iframe{ height:500px; }
+   .carousel-viewport{ aspect-ratio: 4/3; max-height:none; }
  }
 </style>
 </head>
 <body>
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
  <button class="back-btn" onclick="closeMenu()">←</button>
  <div class="logo"> <img src="sfnhslogo.png" alt="SFNHS Logo"> </div>
@@ -106,7 +140,6 @@
 </div>
 <div class="overlay" id="overlay"></div>
 
-<!-- CURRENT PAGE -->
 <div class="page-wrapper" id="pageWrapper">
  <header class="header">
    <i class="fas fa-bars" id="hamburger"></i>
@@ -115,11 +148,26 @@
  </header>
 
  <main class="container">
-   <div class="welcome" id="currentDate"></div>
-   <div class="intro"> Explore scholarly literature, access free research resources, discover statistics, write better papers, and showcase student research. </div>
-   <div class="divider"></div>
+   <div class="welcome" id="currentDate">Today is &lt;Month, Day, Year (Day Today)&gt;</div>
 
-   <!-- 1. FIND RELATED LITERATURE -->
+   <div class="carousel-wrapper" id="carouselWrapper">
+     <div class="carousel-viewport" id="carouselViewport">
+       <div class="carousel-track" id="carouselTrack"></div>
+       <button class="carousel-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+       <button class="carousel-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+     </div>
+     <div class="carousel-dots" id="carouselDots"></div>
+   </div>
+
+   <div class="calendar-section">
+     <div class="divider-thin"></div>
+     <h2 class="calendar-title">SCHOOL CALENDAR</h2>
+     <div class="calendar-frame-wrap">
+       <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FManila&showPrint=0&showTitle=0&showTz=0&showTabs=0&title=SCHOOL%20CALENDAR&showCalendars=0&src=c2ZuaHNsZWFybmluZ2h1YkBnbWFpbC5jb20&src=ZW4ucGhpbGlwcGluZXMjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039be5&color=%230b8043" style="border-width:0" frameborder="0" scrolling="no"></iframe>
+     </div>
+     <div class="divider-thin" style="margin-top:25px;"></div>
+   </div>
+
    <div class="resource-dropdown">
      <div class="resource-dropdown-header" onclick="toggleResource(this)">
        FIND RELATED LITERATURE <i class="fas fa-chevron-down arrow"></i>
@@ -137,7 +185,6 @@
      </div>
    </div>
 
-   <!-- 2. OPEN ACCESS E-BOOK -->
    <div class="resource-dropdown">
      <div class="resource-dropdown-header" onclick="toggleResource(this)">
        OPEN ACCESS E-BOOK <i class="fas fa-chevron-down arrow"></i>
@@ -160,7 +207,6 @@
      </div>
    </div>
 
-   <!-- 3. STATISTICS AND DATA -->
    <div class="resource-dropdown">
      <div class="resource-dropdown-header" onclick="toggleResource(this)">
        STATISTICS AND DATA <i class="fas fa-chevron-down arrow"></i>
@@ -184,7 +230,6 @@
      </div>
    </div>
 
-   <!-- 4. APA 7 CITATION CENTER -->
    <div class="resource-dropdown">
      <div class="resource-dropdown-header" onclick="toggleResource(this)">
        APA 7 CITATION CENTER <i class="fas fa-chevron-down arrow"></i>
@@ -202,7 +247,6 @@
      </div>
    </div>
 
-   <!-- 5. AI FOR RESEARCH CENTER -->
    <div class="resource-dropdown">
      <div class="resource-dropdown-header" onclick="toggleResource(this)">
        AI FOR RESEARCH CENTER <i class="fas fa-chevron-down arrow"></i>
@@ -275,30 +319,139 @@ document.querySelectorAll(".dropdown-button").forEach(button=>{
  });
 });
 
-// MAIN RESOURCE DROPDOWN
+// MAIN RESOURCE DROPDOWN - FIXED
 function toggleResource(header){
- const dropdown = header.parentElement;
- dropdown.classList.toggle("active");
+ const dropdown = header.closest(".resource-dropdown");
+ if(dropdown){
+   dropdown.classList.toggle("active");
+ }
 }
 
 function logout() { sessionStorage.clear(); window.location.href = "index.html"; }
 
-// SHOW CURRENT DATE
 function showCurrentDate(){
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const today = new Date().toLocaleDateString('en-US', options);
-  document.getElementById("currentDate").textContent = `Today is ${today}`;
+  const now = new Date();
+  const month = now.toLocaleDateString('en-US', { month: 'long' });
+  const day = now.getDate();
+  const year = now.getFullYear();
+  const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
+  document.getElementById("currentDate").textContent = `Today is ${month} ${day}, ${year} (${weekday})`;
 }
 
+let carouselIndex = 0;
+let carouselTimer = null;
+let carouselImages = [];
+
+function initCarousel(){
+  const wrapper = document.getElementById("carouselWrapper");
+  const track = document.getElementById("carouselTrack");
+  const dotsWrap = document.getElementById("carouselDots");
+
+  try {
+    const stored = localStorage.getItem("sfnhs_carousel_images");
+    if(stored){
+      carouselImages = JSON.parse(stored);
+    }
+  } catch(e){ carouselImages = []; }
+
+  // For testing uncomment:
+  // carouselImages = [
+  //   "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200",
+  //   "https://images.unsplash.com/photo-1588075592446-265fd1e6e76f?w=1200"
+  // ];
+
+  if(!carouselImages || carouselImages.length === 0){
+    wrapper.classList.remove("has-images");
+    wrapper.style.display = "none";
+    return;
+  }
+
+  wrapper.classList.add("has-images");
+  wrapper.style.display = "block";
+
+  track.innerHTML = "";
+  dotsWrap.innerHTML = "";
+  carouselImages.forEach((src, i)=>{
+    const slide = document.createElement("div");
+    slide.className = "carousel-slide";
+    slide.innerHTML = `<img src="${src}" alt="Carousel ${i+1}">`;
+    track.appendChild(slide);
+
+    const dot = document.createElement("button");
+    dot.className = "carousel-dot" + (i===0 ? " active" : "");
+    dot.addEventListener("click", ()=> goToSlide(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  carouselIndex = 0;
+  updateCarousel();
+  startAutoScroll();
+
+  let startX = 0, isDragging = false;
+  const viewport = document.getElementById("carouselViewport");
+  viewport.addEventListener("touchstart", e=>{ startX = e.touches[0].clientX; stopAutoScroll(); }, {passive:true});
+  viewport.addEventListener("touchend", e=>{
+    const diff = e.changedTouches[0].clientX - startX;
+    if(Math.abs(diff) > 50){
+      if(diff < 0) nextSlide(); else prevSlide();
+    }
+    startAutoScroll();
+  });
+  viewport.addEventListener("mousedown", e=>{ isDragging=true; startX=e.clientX; stopAutoScroll(); });
+  window.addEventListener("mouseup", e=>{
+    if(!isDragging) return;
+    isDragging=false;
+    const diff = e.clientX - startX;
+    if(Math.abs(diff) > 50){
+      if(diff < 0) nextSlide(); else prevSlide();
+    }
+    startAutoScroll();
+  });
+}
+
+function updateCarousel(){
+  const track = document.getElementById("carouselTrack");
+  if(!track) return;
+  track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+  document.querySelectorAll(".carousel-dot").forEach((d,i)=>{
+    d.classList.toggle("active", i===carouselIndex);
+  });
+}
+function nextSlide(){
+  if(carouselImages.length===0) return;
+  carouselIndex = (carouselIndex + 1) % carouselImages.length;
+  updateCarousel();
+}
+function prevSlide(){
+  if(carouselImages.length===0) return;
+  carouselIndex = (carouselIndex - 1 + carouselImages.length) % carouselImages.length;
+  updateCarousel();
+}
+function goToSlide(i){
+  carouselIndex = i;
+  updateCarousel();
+  stopAutoScroll(); startAutoScroll();
+}
+function startAutoScroll(){
+  stopAutoScroll();
+  if(carouselImages.length <=1) return;
+  carouselTimer = setInterval(nextSlide, 5000);
+}
+function stopAutoScroll(){ if(carouselTimer) clearInterval(carouselTimer); }
+
+document.getElementById("nextBtn").addEventListener("click", ()=>{ nextSlide(); stopAutoScroll(); startAutoScroll(); });
+document.getElementById("prevBtn").addEventListener("click", ()=>{ prevSlide(); stopAutoScroll(); startAutoScroll(); });
+
 document.addEventListener("DOMContentLoaded", () => {
- if(sessionStorage.getItem("loggedIn") !== "true"){
-   window.location.href = "index.html";
-   return;
- }
  const studentName = sessionStorage.getItem("studentName") || "STUDENT NAME";
  const nameUpper = studentName.toUpperCase();
  document.getElementById("sideStudentName").textContent = nameUpper + "!";
  showCurrentDate();
+ initCarousel();
+});
+
+window.addEventListener("storage", (e)=>{
+  if(e.key === "sfnhs_carousel_images"){ initCarousel(); }
 });
 
 document.querySelector(".fa-search").addEventListener("click", () => {
@@ -306,5 +459,5 @@ document.querySelector(".fa-search").addEventListener("click", () => {
  if(keyword){ window.open("https://www.google.com/search?q=" + encodeURIComponent(keyword), "_blank"); }
 });
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
