@@ -1,0 +1,324 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - SFNHS Learning Hub</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; font-family:Cambria, Georgia, serif; }
+  body{ background:#f4f4f4; color:#1f5e2f; }
+
+  /* ADMIN LAYOUT */
+.admin-wrapper{ display:block; }
+.admin-header{ background:#145d23; border-bottom:6px solid #c3c9bf; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:18px 30px; position:sticky; top:0; z-index:99; }
+.admin-header h1{ font-size:1.5rem; }
+.logout-btn{ background:#d84545; border:none; color:#fff; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:bold; }
+
+.admin-body{ display:flex; }
+.sidebar{ width:280px; background:#0a4d1c; min-height:calc(100vh - 80px); padding:20px 0; }
+.sidebar-btn{ display:block; width:100%; text-align:left; padding:14px 25px; background:none; border:none; color:#fff; font-size:.9rem; font-weight:bold; text-transform:uppercase; cursor:pointer; }
+.sidebar-btn:hover,.sidebar-btn.active{ background:#145d23; }
+
+.content{ flex:1; padding:30px; }
+.section{ display:none; }
+.section.active{ display:block; }
+.section-title{ font-size:1.2rem; font-weight:bold; color:#145d23; margin-bottom:20px; border-bottom:3px solid #b9c1b2; padding-bottom:10px; }
+
+.card{ background:#ececec; border-radius:15px; padding:25px; margin-bottom:25px; }
+.form-group{ margin-bottom:15px; }
+.form-group label{ display:block; margin-bottom:6px; font-weight:bold; font-size:.9rem; }
+.form-control{ width:100%; padding:12px; border:none; border-radius:8px; background:#d8ddd5; font-family:Cambria; }
+.btn{ padding:12px 20px; border:none; border-radius:8px; background:#145d23; color:#fff; font-weight:bold; cursor:pointer; margin-right:10px; }
+.btn-danger{ background:#d84545; }
+.btn-small{ padding:6px 12px; font-size:.8rem; }
+
+  table{ width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+  th, td{ padding:12px; text-align:left; border-bottom:1px solid #ddd; font-size:.85rem; }
+  th{ background:#b7c4b1; color:#145d23; }
+
+  @media(max-width:900px){.admin-body{ flex-direction:column; }.sidebar{ width:100%; min-height:auto; } }
+</style>
+</head>
+<body>
+
+<!-- ADMIN PANEL -->
+<div class="admin-wrapper" id="adminWrapper">
+  <header class="admin-header">
+    <h1>SFNHS Admin Panel - Welcome, <span id="adminName"></span></h1>
+    <button class="logout-btn" onclick="adminLogout()"><i class="fas fa-right-from-bracket"></i> Logout</button>
+  </header>
+
+  <div class="admin-body">
+    <aside class="sidebar">
+      <button class="sidebar-btn active" onclick="showSection('grades', this)">GRADES</button>
+      <button class="sidebar-btn" onclick="showSection('writing', this)">RESEARCH WRITING LAB</button>
+      <button class="sidebar-btn" onclick="showSection('downloadables', this)">DOWNLOADABLES</button>
+      <button class="sidebar-btn" onclick="showSection('archive', this)">STUDENT RESEARCH ARCHIVE</button>
+      <button class="sidebar-btn" onclick="showSection('panel', this)">RESEARCH PANEL BOARD</button>
+      <button class="sidebar-btn" onclick="showSection('consultation', this)">RESEARCH CONSULTATION LAB</button>
+      <button class="sidebar-btn" onclick="showSection('suggestions', this)">SUGGESTIONS</button>
+    </aside>
+
+    <main class="content">
+      <!-- 1. GRADES -->
+      <section class="section active" id="grades">
+        <h2 class="section-title">Upload & Disseminate Grades</h2>
+        <div class="card">
+          <p style="margin-bottom:15px; font-style:italic;">Upload Excel file with columns: `studentID`, `subject`, `grade`, `quarter`</p>
+          <input type="file" id="excelFile" class="form-control" accept=".xlsx,.xls">
+          <button class="btn" style="margin-top:15px;" onclick="uploadGrades()"><i class="fas fa-upload"></i> Upload & Disseminate</button>
+          <div id="uploadStatus" style="margin-top:10px;"></div>
+        </div>
+        <div class="card">
+          <h3>Student Grades Database</h3>
+          <table id="gradesTable">
+            <thead><tr><th>Student ID</th><th>Subject</th><th>Grade</th><th>Quarter</th><th>Date</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 2. RESEARCH WRITING LAB -->
+      <section class="section" id="writing">
+        <h2 class="section-title">Customize Research Writing Lab</h2>
+        <div class="card">
+          <div class="form-group"><label>Title</label><input type="text" id="writingTitle" class="form-control"></div>
+          <div class="form-group"><label>Link</label><input type="text" id="writingLink" class="form-control"></div>
+          <button class="btn" onclick="addItem('writing')">ADD</button>
+        </div>
+        <div class="card"><table id="writingTable"><thead><tr><th>Title</th><th>Link</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <!-- 3. DOWNLOADABLES -->
+      <section class="section" id="downloadables">
+        <h2 class="section-title">Customize Downloadables</h2>
+        <div class="card">
+          <div class="form-group"><label>File Name</label><input type="text" id="dlName" class="form-control"></div>
+          <div class="form-group"><label>Download Link</label><input type="text" id="dlLink" class="form-control"></div>
+          <button class="btn" onclick="addItem('downloadables')">ADD</button>
+        </div>
+        <div class="card"><table id="downloadablesTable"><thead><tr><th>File Name</th><th>Link</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <!-- 4. ARCHIVE -->
+      <section class="section" id="archive">
+        <h2 class="section-title">Customize Student Research Archive</h2>
+        <div class="card">
+          <div class="form-group"><label>Level</label>
+            <select id="archiveLevel" class="form-control"><option>JHS</option><option>SHS</option></select>
+          </div>
+          <div class="form-group"><label>Research Title</label><input type="text" id="archiveTitle" class="form-control"></div>
+          <div class="form-group"><label>Author</label><input type="text" id="archiveAuthor" class="form-control"></div>
+          <button class="btn" onclick="addItem('archive')">ADD</button>
+        </div>
+        <div class="card"><table id="archiveTable"><thead><tr><th>Level</th><th>Title</th><th>Author</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <!-- 5. PANEL BOARD -->
+      <section class="section" id="panel">
+        <h2 class="section-title">Customize Research Panel Board</h2>
+        <div class="card">
+          <div class="form-group"><label>Name</label><input type="text" id="panelName" class="form-control"></div>
+          <div class="form-group"><label>Position</label><input type="text" id="panelPosition" class="form-control"></div>
+          <div class="form-group"><label>Image URL</label><input type="text" id="panelImg" class="form-control" placeholder="https://..."></div>
+          <button class="btn" onclick="addPanel()">ADD MEMBER</button>
+        </div>
+        <div class="card" id="panelList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:20px;"></div>
+      </section>
+
+      <!-- 6. CONSULTATION -->
+      <section class="section" id="consultation">
+        <h2 class="section-title">Research Consultation Requests</h2>
+        <div class="card">
+          <table id="consultTable">
+            <thead><tr><th>Student ID</th><th>Name</th><th>Topic</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. SUGGESTIONS -->
+      <section class="section" id="suggestions">
+        <h2 class="section-title">Student Suggestions</h2>
+        <div class="card">
+          <table id="suggestTable">
+            <thead><tr><th>Student ID</th><th>Message</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const ADMIN_IDS = ["06211993", "02092006"];
+
+// AUTH CHECK - LINKED TO index.html
+document.addEventListener("DOMContentLoaded", () => {
+  const loggedIn = sessionStorage.getItem("loggedIn");
+  const studentID = sessionStorage.getItem("studentID");
+  const studentName = sessionStorage.getItem("studentName");
+
+  if(loggedIn!== "true" ||!ADMIN_IDS.includes(studentID)){
+    alert("Unauthorized Access. Please login as Admin first.");
+    window.location.href = "index.html"; // kick back to login
+    return;
+  }
+  document.getElementById("adminName").textContent = studentName;
+  loadAllData();
+});
+
+function adminLogout(){
+  sessionStorage.clear();
+  window.location.href = "index.html";
+}
+
+// NAV
+function showSection(id, btn){
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".sidebar-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+}
+
+// LOCAL STORAGE HELPERS
+const getData = key => JSON.parse(localStorage.getItem(key) || "[]");
+const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+// 1. GRADES - EXCEL UPLOAD
+function uploadGrades(){
+  const file = document.getElementById("excelFile").files[0];
+  if(!file) return alert("Please select an Excel file");
+  const reader = new FileReader();
+  reader.onload = e => {
+    const workbook = XLSX.read(e.target.result, {type: 'binary'});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json(sheet);
+
+    let grades = getData("grades");
+    data.forEach(row => {
+      grades.push({...row, date: new Date().toLocaleDateString()});
+      // Disseminate: Save to individual student account
+      let studentGrades = getData("studentGrades_" + row.studentID);
+      studentGrades.push(row);
+      setData("studentGrades_" + row.studentID, studentGrades);
+    });
+    setData("grades", grades);
+    document.getElementById("uploadStatus").innerHTML = `<span style="color:green;">Success! ${data.length} grades uploaded and disseminated.</span>`;
+    loadGrades();
+  };
+  reader.readAsBinaryString(file);
+}
+function loadGrades(){
+  const tbody = document.querySelector("#gradesTable tbody");
+  tbody.innerHTML = "";
+  getData("grades").forEach(g => {
+    tbody.innerHTML += `<tr><td>${g.studentID}</td><td>${g.subject}</td><td>${g.grade}</td><td>${g.quarter}</td><td>${g.date}</td></tr>`;
+  });
+}
+
+// 2-4. GENERIC ADD/REMOVE FOR WRITING, DL, ARCHIVE
+function addItem(type){
+  let data = getData(type);
+  let newItem = {id: Date.now()};
+  if(type === "writing"){
+    newItem.title = document.getElementById("writingTitle").value;
+    newItem.link = document.getElementById("writingLink").value;
+  }
+  if(type === "downloadables"){
+    newItem.name = document.getElementById("dlName").value;
+    newItem.link = document.getElementById("dlLink").value;
+  }
+  if(type === "archive"){
+    newItem.level = document.getElementById("archiveLevel").value;
+    newItem.title = document.getElementById("archiveTitle").value;
+    newItem.author = document.getElementById("archiveAuthor").value;
+  }
+  if(Object.values(newItem).includes("")) return alert("Fill all fields");
+  data.push(newItem);
+  setData(type, data);
+  loadItems(type);
+  document.querySelectorAll(".form-control").forEach(i => i.value = "");
+}
+function deleteItem(type, id){
+  setData(type, getData(type).filter(i => i.id!= id));
+  loadItems(type);
+}
+function loadItems(type){
+  const tbody = document.querySelector(`#${type}Table tbody`);
+  tbody.innerHTML = "";
+  getData(type).forEach(i => {
+    if(type === "writing") tbody.innerHTML += `<tr><td>${i.title}</td><td><a href="${i.link}" target="_blank">${i.link}</a></td><td><button class="btn btn-danger btn-small" onclick="deleteItem('writing',${i.id})">Remove</button></td></tr>`;
+    if(type === "downloadables") tbody.innerHTML += `<tr><td>${i.name}</td><td><a href="${i.link}" target="_blank">${i.link}</a></td><td><button class="btn btn-danger btn-small" onclick="deleteItem('downloadables',${i.id})">Remove</button></td></tr>`;
+    if(type === "archive") tbody.innerHTML += `<tr><td>${i.level}</td><td>${i.title}</td><td>${i.author}</td><td><button class="btn btn-danger btn-small" onclick="deleteItem('archive',${i.id})">Remove</button></td></tr>`;
+  });
+}
+
+// 5. PANEL BOARD
+function addPanel(){
+  let data = getData("panel");
+  let newItem = {
+    id: Date.now(),
+    name: document.getElementById("panelName").value,
+    position: document.getElementById("panelPosition").value,
+    img: document.getElementById("panelImg").value || "https://via.placeholder.com/150"
+  };
+  if(!newItem.name ||!newItem.position) return alert("Fill Name and Position");
+  data.push(newItem);
+  setData("panel", data);
+  loadPanel();
+  document.querySelectorAll("#panel.form-control").forEach(i => i.value = "");
+}
+function deletePanel(id){
+  setData("panel", getData("panel").filter(p => p.id!= id));
+  loadPanel();
+}
+function loadPanel(){
+  const div = document.getElementById("panelList");
+  div.innerHTML = "";
+  getData("panel").forEach(p => {
+    div.innerHTML += `<div class="card" style="text-align:center;">
+      <img src="${p.img}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:10px;">
+      <h4>${p.name}</h4><p>${p.position}</p>
+      <button class="btn btn-danger btn-small" onclick="deletePanel(${p.id})">Remove</button>
+    </div>`;
+  });
+}
+
+// 6-7. CONSULTATION & SUGGESTIONS - VIEW ONLY
+function loadConsultation(){
+  const tbody = document.querySelector("#consultTable tbody");
+  const data = getData("consultations");
+  tbody.innerHTML = "";
+  data.forEach(c => {
+    tbody.innerHTML += `<tr><td>${c.studentID}</td><td>${c.name}</td><td>${c.topic}</td><td>${c.date}</td><td>${c.status}</td><td><button class="btn btn-small" onclick="updateStatus('consultations',${c.id})">Mark Done</button></td></tr>`;
+  });
+}
+function loadSuggestions(){
+  const tbody = document.querySelector("#suggestTable tbody");
+  const data = getData("suggestions");
+  tbody.innerHTML = "";
+  data.forEach(s => {
+    tbody.innerHTML += `<tr><td>${s.studentID}</td><td>${s.message}</td><td>${s.date}</td><td><button class="btn btn-danger btn-small" onclick="deleteSuggestion(${s.id})">Delete</button></td></tr>`;
+  });
+}
+function deleteSuggestion(id){
+  setData("suggestions", getData("suggestions").filter(s => s.id!= id));
+  loadSuggestions();
+}
+function updateStatus(type, id){
+  let data = getData(type).map(i => i.id == id? {...i, status: "Done"} : i);
+  setData(type, data);
+  loadConsultation();
+}
+
+function loadAllData(){
+  loadGrades(); loadItems('writing'); loadItems('downloadables');
+  loadItems('archive'); loadPanel(); loadConsultation(); loadSuggestions();
+}
+</script>
+</body>
+</html>
