@@ -106,7 +106,9 @@
 </div>
 
 <script>
-
+if (sessionStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "index.html";
+}
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 const pageWrapper = document.getElementById("pageWrapper");
