@@ -1,85 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
- if(sessionStorage.getItem("loggedIn")!== "true"){
-   // window.location.href = "index.html";
- }
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SFNHS Learning Hub - Downloadables</title>
+<title>M SCHOLAR - My Account</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
  *{ margin:0; padding:0; box-sizing:border-box; }
- html, body{ font-family:Cambria, Georgia, serif; background:#dbe5d5; color:#1f5e2f; overflow-x:hidden; display:flex; height:100%; }
+ html, body{ font-family:Cambria, Georgia, serif; background:#f5f5f5; width:100%; overflow-x:hidden; }
  body.no-scroll{ overflow:hidden; }
-.page-wrapper{ flex:1; min-height:100vh; background:#f4f4f4; transition: margin-left .4s ease; overflow-y:auto; padding-top: 80px; display:flex; flex-direction:column; }
-.page-wrapper.shifted{ margin-left: 420px; }
-.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.25); backdrop-filter:blur(3px); opacity:0; visibility:hidden; transition:0.35s ease; z-index:999; display:none; }
-.sidebar{ position:fixed; top:0; left:0; width:45%; min-width:320px; max-width:420px; height:100vh; overflow-y:auto; background:#0a4d1c; color:#fff; z-index:1000; transform:translateX(-100%); transition:transform .4s ease; padding:18px 28px; }
+.page-wrapper{ min-height:100vh; background:#f5f5f5; padding-top:80px; display:flex; flex-direction:column; width:100%; }
+.page-wrapper.shifted{ margin-left:420px; }
+.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.25); opacity:0; visibility:hidden; transition:.35s; z-index:999; display:none; }
+.sidebar{ position:fixed; top:0; left:0; width:45%; min-width:320px; max-width:420px; height:100vh; overflow-y:auto; background:#0a4d1c; color:#fff; z-index:1000; transform:translateX(-100%); transition:.4s; padding:18px 28px; }
 .sidebar.show{ transform:translateX(0); }
-.back-btn{ background:none; border:none; color:white; font-size:32px; cursor:pointer; margin-bottom:12px; display:block; }
+.back-btn{ background:none; border:none; color:white; font-size:32px; cursor:pointer; }
 .logo{ text-align:center; margin:8px 0 25px; }
 .logo img{ width:190px; max-width:85%; }
-.welcome-side{ color:white; text-align:center; margin:0 0 40px; font-size:16px; font-weight:bold; white-space:nowrap; text-transform: uppercase; }
-.menu{ padding:0; }
-.menu-item,.dropdown-button{ width:100%; display:flex; justify-content:space-between; align-items:center; color:white; background:none; border:none; text-decoration:none; font-size:15px; font-weight:bold; cursor:pointer; padding:12px 0; text-align:left; text-transform:uppercase; letter-spacing:0.3px; white-space:nowrap; font-family: Cambria, Georgia, serif; }
-.menu-item:hover,.dropdown-button:hover{ opacity:0.85; }
-.dropdown-content{ max-height:0; overflow:hidden; transition:max-height .4s ease; margin-left:22px; border-left:2px solid rgba(255,255,255,.3); padding-left:16px; }
+.welcome-side{ color:white; text-align:center; margin:0 0 40px; font-size:16px; font-weight:bold; text-transform:uppercase; }
+.menu-item,.dropdown-button{ width:100%; display:flex; justify-content:space-between; align-items:center; color:white; background:none; border:none; text-decoration:none; font-size:15px; font-weight:bold; cursor:pointer; padding:12px 0; text-transform:uppercase; font-family:Cambria, Georgia, serif; }
+.dropdown-content{ max-height:0; overflow:hidden; margin-left:22px; border-left:2px solid rgba(255,255,255,.3); padding-left:16px; transition:max-height.4s ease; }
 .dropdown-content.show{ max-height:250px; }
-.dropdown-content a{ display:block; color:white; text-decoration:none; font-size:14px; font-style:italic; font-weight:400; padding:8px 0; text-transform:none; white-space:nowrap; font-family: Cambria, Georgia, serif; }
+.dropdown-content a{ display:block; color:white; text-decoration:none; font-size:14px; font-style:italic; padding:8px 0; }
 .arrow{ font-size:12px; transition:.3s ease; margin-left:8px; }
 .arrow.rotate{ transform:rotate(180deg); }
-.header{ background:#145d23; border-bottom:6px solid #c3c9bf; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:18px 30px; position: fixed; top: 0; left: 0; right: 0; z-index: 998; height: 80px; }
-.header h1{ font-size:1.7rem; font-weight:bold; }
+.header{ background:#145d23; border-bottom:6px solid #c3c9bf; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:18px 30px; position:fixed; top:0; left:0; right:0; z-index:998; height:80px; }
+.header h1{ font-size:1.7rem; }
 .header i{ font-size:1.8rem; cursor:pointer; }
-.container{ width:90%; max-width:1400px; margin:auto; padding:50px 0; flex:1; }
-.my-account{
-  text-align:center;
-  font-size:1.7rem;
-  font-weight:bold;
-  font-style:normal;
-  text-transform:uppercase;
-  color:#145d23;
-  letter-spacing:1px;
+.container{ width:100%; padding:16px 18px 40px; flex:1; }
+.my-account{ text-align:center; font-size:1.2rem; font-weight:bold; text-transform:uppercase; color:#145d23; margin-bottom:12px; }
+.profile-card{ background:white; border-radius:0; border:1px solid #e2e2e2; padding:20px 14px; width:100%; margin:0 auto; }
+.profile-top{ display:flex; flex-direction:column; align-items:center; text-align:center; border-bottom:1px solid #ddd; padding-bottom:16px; margin-bottom:10px; }
+#avatarImg{ width:84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid #145d23; display:none; }
+#avatarInitial{ width:84px; height:84px; border-radius:50%; background:#145d23; color:white; display:flex; align-items:center; justify-content:center; font-size:2.4rem; font-weight:bold; }
+.change-btn{ margin-top:10px; background:#145d23; color:white; border:none; padding:6px 16px; border-radius:20px; font-size:0.72rem; cursor:pointer; text-transform:uppercase; }
+#fileInput{ display:none; }
+.profile-name h2{ font-size:1rem; color:#145d23; text-transform:uppercase; margin-top:12px; }
+.profile-name p{ font-size:0.78rem; color:#666; }
+.student-table{ width:100%; border-collapse:collapse; font-family:"Times New Roman", Times, serif; }
+.student-table th{ text-align:right; padding:14px 10px 14px 6px; background:#f1f7ef; color:#145d23; width:26%; font-size:0.72rem; font-weight:bold; border:none; border-bottom:1px solid #d8e5d2; text-transform:uppercase; word-wrap:break-word; }
+.student-table td{ padding:14px 10px; border:none; border-bottom:1px solid #d8e5d2; font-size:0.80rem; color:#222; width:74%; }
+@media(max-width:1024px){
+.page-wrapper.shifted{ margin-left:0; }
+.overlay{ display:block; }
+.overlay.show{ opacity:1; visibility:visible; }
+.sidebar{ width:85%; }
+.header{ padding:15px 20px; height:70px; }
+.page-wrapper{ padding-top:70px; }
 }
-.footer-top{ background:#b7c4b1; padding:35px; display:flex; gap:25px; align-items:flex-start; }
-.footer-logo{ width:110px; }
-.footer-content h3{ font-size:1rem; font-style:italic; font-weight:normal; margin-bottom:15px; }
-.footer-content p{ font-size:.80rem; line-height:1.8; text-align:justify; }
-.footer-bottom{ background:#145d23; color:#fff; text-align:center; padding:15px; font-size:.70rem; }
- @media(max-width:1024px){
-  .page-wrapper.shifted{ margin-left:0; }
-  .overlay{ display:block; }
-  .overlay.show{ opacity:1; visibility:visible; }
-  .sidebar{ width:85%; }
-  .header{ padding:15px 20px; height: 70px; }
-  .page-wrapper{ padding-top: 70px; }
-  .header h1{ font-size:1.4rem; }
-  .header i{ font-size:1.5rem; }
-  .container{ width:88%; padding:30px 0; }
-  .footer-top{ flex-direction:column; text-align:center; }
-  .footer-logo{ margin:auto; }
- }
 </style>
 </head>
 <body>
-
 <div class="sidebar" id="sidebar">
  <button class="back-btn" onclick="closeMenu()">←</button>
- <div class="logo"> <img src="sfnhslogo.png" alt="SFNHS Logo"> </div>
+ <div class="logo"><img src="mscholarlogo.png" alt="MSCHOLAR Logo"></div>
  <div class="welcome-side">Welcome <span id="sideStudentName">&lt;NAME!&gt;</span></div>
  <div class="menu">
    <a href="loginaccessapproved.html" class="menu-item">HOME</a>
    <a href="myaccount.html" class="menu-item">MY ACCOUNT</a>
-   <a href="mygrades.html" class="menu-item" >MY GRADES</a>
-   <button class="dropdown-button"> <span>RESEARCH WRITING LAB</span> <span class="arrow">⌄</span> </button>
-   <div class="dropdown-content"> <a href="researchwritinglab.html">Research Writing Guide</a> </div>
-   <button class="dropdown-button"> <span>DOWNLOADABLES</span> <span class="arrow">⌄</span> </button>
-   <div class="dropdown-content"> <a href="downloadables.html">Research Related Templates</a> </div>
-   <button class="dropdown-button"> <span>STUDENT RESEARCH ARCHIVE</span> <span class="arrow">⌄</span> </button>
-   <div class="dropdown-content"> <a href="jhsstudentresearcharchive.html">Junior High School</a> <a href="shsstudentresearcharchive.html">Senior High School</a> </div>
+   <a href="mygrades.html" class="menu-item">MY GRADES</a>
+   <button class="dropdown-button"><span>RESEARCH WRITING LAB</span><span class="arrow">⌄</span></button>
+   <div class="dropdown-content"><a href="researchwritinglab.html">Research Writing Guide</a></div>
+   <button class="dropdown-button"><span>DOWNLOADABLES</span><span class="arrow">⌄</span></button>
+   <div class="dropdown-content"><a href="downloadables.html">Research Related Templates</a></div>
+   <button class="dropdown-button"><span>STUDENT RESEARCH ARCHIVE</span><span class="arrow">⌄</span></button>
+   <div class="dropdown-content"><a href="jhsstudentresearcharchive.html">Junior High School</a><a href="shsstudentresearcharchive.html">Senior High School</a></div>
    <a href="researchconsultationlab.html" class="menu-item">RESEARCH CONSULTATION LAB</a>
    <a href="researchpanelboard.html" class="menu-item">RESEARCH PANEL BOARD</a>
    <a href="suggestions.html" class="menu-item">SUGGESTIONS</a>
@@ -87,62 +72,49 @@
  </div>
 </div>
 <div class="overlay" id="overlay"></div>
-
 <div class="page-wrapper" id="pageWrapper">
- <header class="header">
-   <i class="fas fa-bars" id="hamburger"></i>
-   <h1>SFNHS Learning Hub</h1>
-   <i class="fas fa-search"></i>
- </header>
-
+ <header class="header"><i class="fas fa-bars" id="hamburger"></i><h1>M SCHOLAR</h1><i class="fas fa-search"></i></header>
  <main class="container">
-   <div class="my-account">MY ACCOUNT</div>
+   <div class="my-account">My Account</div>
+   <div class="profile-card">
+     <div class="profile-top">
+       <img id="avatarImg" src=""><div id="avatarInitial">J</div>
+       <button class="change-btn" id="changeBtn">Change Profile</button>
+       <input type="file" id="fileInput" accept="image/*">
+       <div class="profile-name"><h2 id="profileFullName">JOHN REY BALASTA</h2><p id="profileTrack">Track - Grade Level</p></div>
+     </div>
+     <table class="student-table">
+       <tr><th>LRN:</th><td id="tdLrn">-</td></tr><tr><th>NAME:</th><td id="tdName">-</td></tr><tr><th>GRADE LEVEL:</th><td id="tdGrade">-</td></tr><tr><th>SECTION:</th><td id="tdSection">-</td></tr><tr><th>TRACK:</th><td id="tdTrack">-</td></tr><tr><th>BIRTH DATE:</th><td id="tdBirth">-</td></tr><tr><th>HOME ADDRESS:</th><td id="tdAddress">-</td></tr><tr><th>CONTACT NUMBER:</th><td id="tdContact">-</td></tr><tr><th>EMAIL:</th><td id="tdEmail">-</td></tr><tr><th>PARENT/GUARDIAN NAME:</th><td id="tdParentName">-</td></tr><tr><th>P/G CONTACT NUMBER:</th><td id="tdParentContact">-</td></tr>
+     </table>
+   </div>
  </main>
-
- <footer>
-   <div class="footer-top"><img src="sfnhslogo.png" alt="SFNHS Logo" class="footer-logo"><div class="footer-content"><h3>SFNHS Learning Hub</h3><p>SFNHS Research Learning Hub is a web-based platform that provides students, teachers, and researchers with easy access to research resources, scholarly databases, citation tools, statistical data, research guides, digital library services, and archived research outputs, all in one centralized and user-friendly portal.</p></div></div>
-   <div class="footer-bottom"> © Copyright 2026 San Fernando National High School | Research Office </div>
- </footer>
 </div>
-
 <script>
-if (sessionStorage.getItem("loggedIn") !== "true") {
-  window.location.href = "index.html";
-}
-
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
-const pageWrapper = document.getElementById("pageWrapper");
-const body = document.body;
-
+if (sessionStorage.getItem("loggedIn")!== "true") { window.location.href = "index.html"; }
+const sidebar=document.getElementById("sidebar"), overlay=document.getElementById("overlay"), pageWrapper=document.getElementById("pageWrapper"), body=document.body;
 function openMenu(){ sidebar.classList.add("show"); overlay.classList.add("show"); pageWrapper.classList.add("shifted"); body.classList.add("no-scroll"); }
 function closeMenu(){ sidebar.classList.remove("show"); overlay.classList.remove("show"); pageWrapper.classList.remove("shifted"); body.classList.remove("no-scroll"); }
-function showAlert(page){ alert(page + " - Coming Soon"); closeMenu(); }
-function logout() { sessionStorage.clear(); window.location.href = "index.html"; }
-
-document.getElementById("hamburger").addEventListener("click", openMenu);
-overlay.addEventListener("click", closeMenu);
-
+function logout(){ sessionStorage.clear(); localStorage.removeItem("profilePic"); window.location.href="index.html"; }
+document.getElementById("hamburger").addEventListener("click", openMenu); overlay.addEventListener("click", closeMenu);
 document.querySelectorAll(".dropdown-button").forEach(button=>{
  button.addEventListener("click",()=>{
    const content = button.nextElementSibling;
    const arrow = button.querySelector(".arrow");
    document.querySelectorAll(".dropdown-content").forEach(d => { if(d!== content) d.classList.remove("show"); });
-   document.querySelectorAll(".dropdown-button .arrow").forEach(a => { if(a!== arrow) { a.classList.remove("rotate"); a.textContent = "⌄"; } });
+   document.querySelectorAll(".arrow").forEach(a => { if(a!== arrow) { a.classList.remove("rotate"); a.textContent = "⌄"; } });
    content.classList.toggle("show");
    arrow.classList.toggle("rotate");
    arrow.textContent = content.classList.contains("show")? "^" : "⌄";
  });
 });
-
-document.addEventListener("DOMContentLoaded", () => {
- const studentName = sessionStorage.getItem("studentName") || "STUDENT NAME";
- document.getElementById("sideStudentName").textContent = studentName.toUpperCase() + "!";
-});
-
-document.querySelector(".fa-search").addEventListener("click", () => {
- const keyword = prompt("Search Resources");
- if(keyword){ window.open("https://www.google.com/search?q=" + encodeURIComponent(keyword), "_blank"); }
+const fileInput=document.getElementById("fileInput"), avatarImg=document.getElementById("avatarImg"), avatarInitial=document.getElementById("avatarInitial");
+document.getElementById("changeBtn").addEventListener("click",()=>fileInput.click());
+fileInput.addEventListener("change",function(){ const f=this.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ avatarImg.src=e.target.result; avatarImg.style.display="block"; avatarInitial.style.display="none"; localStorage.setItem("profilePic",e.target.result); }; r.readAsDataURL(f); });
+document.addEventListener("DOMContentLoaded",()=>{
+ const saved=localStorage.getItem("profilePic"); if(saved){ avatarImg.src=saved; avatarImg.style.display="block"; avatarInitial.style.display="none"; }
+ const n=sessionStorage.getItem("studentName")||"John Rey Balasta";
+ document.getElementById("sideStudentName").textContent=n.toUpperCase()+"!"; document.getElementById("profileFullName").textContent=n.toUpperCase(); document.getElementById("avatarInitial").textContent=n.trim().charAt(0).toUpperCase();
+ document.getElementById("tdLrn").textContent=sessionStorage.getItem("studentLrn")||"-"; document.getElementById("tdName").textContent=n; document.getElementById("tdGrade").textContent=sessionStorage.getItem("studentGrade")||"-"; document.getElementById("tdSection").textContent=sessionStorage.getItem("studentSection")||"-"; document.getElementById("tdTrack").textContent=sessionStorage.getItem("studentTrack")||"-"; document.getElementById("tdBirth").textContent=sessionStorage.getItem("studentBirth")||"-"; document.getElementById("tdAddress").textContent=sessionStorage.getItem("studentAddress")||"-"; document.getElementById("tdContact").textContent=sessionStorage.getItem("studentContact")||"-"; document.getElementById("tdEmail").textContent=sessionStorage.getItem("studentEmail")||"-"; document.getElementById("tdParentName").textContent=sessionStorage.getItem("parentName")||"-"; document.getElementById("tdParentContact").textContent=sessionStorage.getItem("parentContact")||"-"; document.getElementById("profileTrack").textContent=(sessionStorage.getItem("studentTrack")||"Track")+" - "+(sessionStorage.getItem("studentGrade")||"Grade Level");
 });
 </script>
 </body>

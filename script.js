@@ -1,9 +1,9 @@
 // STUDENT ACCOUNTS: ID : Name
 const validStudents = {
-  "01020304": "Juan Dela Cruz",
-  "05060708": "Maria Makiling",
-  "09080706": "Jose Rosal",
-  "05040302": "Ernesto Dela Cruz",
+  "12345671": "Juan Dela Cruz",
+  "12345672": "Maria Makiling",
+  "12345673": "Jose Rosal",
+  "12345674": "Ernesto Dela Cruz",
 };
 
 // ADMIN ACCOUNTS: ID : Password
