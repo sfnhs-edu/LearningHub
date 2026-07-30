@@ -36,6 +36,8 @@ body.no-scroll{overflow:hidden;}
   <div class="menu">
     <a href="admin-home.html" class="menu-item">HOME</a>
     
+    <a href="admin-enroll.html" class="menu-item">ENROLL STUDENTS</a>
+    
     <button class="dropdown-button"><span>STUDENTS ACCOUNT</span><span class="arrow">⌄</span></button>
     <div class="dropdown-content">
       <a href="admin-upload.html">Upload Students Details</a>
@@ -76,6 +78,11 @@ body.no-scroll{overflow:hidden;}
  </main>
 </div>
 <script>
+// AUTH CHECK
+if (sessionStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "index.html";
+}
+
 const sidebar=document.getElementById("sidebar"),overlay=document.getElementById("overlay"),pageWrapper=document.getElementById("pageWrapper"),body=document.body;
 function openMenu(){sidebar.classList.add("show");overlay.classList.add("show");pageWrapper.classList.add("shifted");body.classList.add("no-scroll");}
 function closeMenu(){sidebar.classList.remove("show");overlay.classList.remove("show");pageWrapper.classList.remove("shifted");body.classList.remove("no-scroll");}
