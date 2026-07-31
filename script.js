@@ -1,85 +1,75 @@
-// ADMIN ACCOUNTS: LRN : Password
-const adminPasswords = {
-  "06211993": "kuramog25",
-  "02092006": "JhnRy@1437"
-};
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHimS8dTK3yaLhisZ5UZYpu3a2B3UWnXqjaXXrkco2OTq5XroEWBPMilQSagz4bscd9w/exec"; // IMPORTANT
+let accounts = [];
 
-// ADMIN NAMES: LRN : Name
-const adminNames = {
-  "06211993": "Michael Molina",
-  "02092006": "John Rey Balasta"
-};
+// LOAD ACCOUNTS = "account.json"
+async function loadAccounts(){
+  try{
+    const res = await fetch(WEB_APP_URL + "?action=getAccounts");
+    accounts = await res.json();
+  }catch(err){
+    console.log("Error loading accounts", err);
+    alert("Cannot connect to database. Check WEB_APP_URL");
+  }
+}
 
-// OLD TEST ACCOUNTS - you can delete this later
-const validStudents = {
-  "12345671": "Juan Dela Cruz",
-  "12345672": "Maria Makiling",
-  "12345673": "Jose Rosal",
-};
+// Run when page loads
+document.addEventListener("DOMContentLoaded", loadAccounts);
 
-function validateLogin() {
-  const studentLRN = document.getElementById("studentLRN").value.trim();
+async function validateLogin() {
+  const studentId = document.getElementById("studentId").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if(!studentLRN ||!password) return alert("Please enter LRN and Password");
+  // Make sure accounts are loaded first
+  if(accounts.length === 0) await loadAccounts();
 
-  // 1. CHECK ADMIN FIRST
-  if (adminPasswords.hasOwnProperty(studentLRN)) {
-    if (adminPasswords[studentLRN] === password) {
+  // 1. ADMIN HARDCODED
+  const adminPasswords = { "06211993": "kuramog25", "02092006": "JhnRy@1437" };
+  const adminNames = { "06211993": "Michael Molina", "02092006": "John Rey Balasta" };
+
+  if (adminPasswords[studentId]) {
+    if (adminPasswords[studentId] === password) {
       sessionStorage.setItem("loggedIn", "true");
-      sessionStorage.setItem("studentLRN", studentLRN);
-      sessionStorage.setItem("studentName", adminNames[studentLRN]);
-      showOverlay(); // SHOW POPUP FOR ADMIN
+      sessionStorage.setItem("studentLRN", studentId);
+      sessionStorage.setItem("studentName", adminNames[studentId]);
+      sessionStorage.setItem("role", "admin");
+      showOverlay();
       return;
-    } else {
-      alert("Invalid Admin Password!");
-      return;
-    }
+    } else { alert("Invalid Admin Password!"); return; }
   }
 
-  // 2. CHECK ENROLLED STUDENTS FROM LOCALSTORAGE
-  let db = JSON.parse(localStorage.getItem('studentDB') || '[]');
-  let enrolledStudent = db.find(s => s.lrn === studentLRN);
+  // 2. STUDENT FROM SHEET = account.json
+  const student = accounts.find(acc => acc.LRN === studentId);
 
-  // 3. CHECK OLD TEST ACCOUNTS as fallback
-  let testStudentName = validStudents[studentLRN];
+  if (!student) { alert("No Account Found!"); return; }
 
-  if (enrolledStudent || testStudentName) {
-    const defaultPassword = studentLRN; // default = LRN
-    const savedPassword = localStorage.getItem("password_" + studentLRN) || defaultPassword;
+  const defaultPassword = student.LRN;
+  const currentPassword = student["LOG IN PASSKEY"];
 
-    if (savedPassword!== password) {
-      alert("Incorrect Password!");
-      return;
-    }
+  if (currentPassword!== password) { alert("Incorrect Password!"); return; }
 
-    sessionStorage.setItem("loggedIn", "true");
-    sessionStorage.setItem("studentLRN", studentLRN);
-    sessionStorage.setItem("studentName", enrolledStudent? enrolledStudent.name : testStudentName);
+  sessionStorage.setItem("loggedIn", "true");
+  sessionStorage.setItem("studentLRN", student.LRN);
+  sessionStorage.setItem("studentName", student.NAME);
+  sessionStorage.setItem("role", "student");
 
-    // CONDITION: If password is still default, force change
-    if (password === defaultPassword) {
-      window.location.href = "changepassword.html";
-    } else {
-      window.location.href = "loginaccessapproved.html";
-    }
+  // Force change if still default
+  if (password === defaultPassword) {
+    window.location.href = "changepassword.html";
   } else {
-    alert("No Account Found! Please contact admin to enroll.");
+    window.location.href = "loginaccessapproved.html";
   }
 }
 
-// OVERLAY FUNCTIONS
-function showOverlay(){
-  document.getElementById("adminOverlay").classList.add("show");
-}
-function closeOverlay(){
-  document.getElementById("adminOverlay").classList.remove("show");
-}
-function goToPage(page){
-  window.location.href = page;
-}
+function showOverlay(){ document.getElementById("adminOverlay").classList.add("show"); }
+function closeOverlay(){ document.getElementById("adminOverlay").classList.remove("show"); }
+function goToPage(page){ window.location.href = page; }
 
-// Close overlay when clicking outside
-document.getElementById("adminOverlay").addEventListener("click", function(e){
-  if(e.target === this) closeOverlay();
+// Wait for overlay to exist before adding listener
+document.addEventListener("DOMContentLoaded", ()=>{
+  const overlay = document.getElementById("adminOverlay");
+  if(overlay){
+    overlay.addEventListener("click", function(e){
+      if(e.target === this) closeOverlay();
+    });
+  }
 });

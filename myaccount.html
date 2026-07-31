@@ -110,40 +110,11 @@ document.querySelectorAll(".dropdown-button").forEach(button=>{
 const fileInput=document.getElementById("fileInput"), avatarImg=document.getElementById("avatarImg"), avatarInitial=document.getElementById("avatarInitial");
 document.getElementById("changeBtn").addEventListener("click",()=>fileInput.click());
 fileInput.addEventListener("change",function(){ const f=this.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ avatarImg.src=e.target.result; avatarImg.style.display="block"; avatarInitial.style.display="none"; localStorage.setItem("profilePic",e.target.result); }; r.readAsDataURL(f); });
-
-// === LINKED TO ADMIN UPLOAD EXCEL ===
 document.addEventListener("DOMContentLoaded",()=>{
  const saved=localStorage.getItem("profilePic"); if(saved){ avatarImg.src=saved; avatarImg.style.display="block"; avatarInitial.style.display="none"; }
-
- const loginName = (sessionStorage.getItem("studentName")||"John Rey Balasta").trim().toUpperCase();
- const db = JSON.parse(localStorage.getItem('studentDB')||'[]');
-
- // Find by NAME (from Excel) - case-insensitive match
- let found = null;
- if(db.length>0){
-   found = db.find(s=> s.name.trim().toUpperCase() === loginName)
-        || db.find(s=> s.name.toUpperCase().includes(loginName) || loginName.includes(s.name.toUpperCase()))
-        || db.find(s=> s.lrn === sessionStorage.getItem("studentLrn"));
- }
-
- const displayName = found?.name || loginName || "John Rey Balasta";
- document.getElementById("sideStudentName").textContent=displayName.toUpperCase()+"!";
- document.getElementById("profileFullName").textContent=displayName.toUpperCase();
- document.getElementById("avatarInitial").textContent=displayName.trim().charAt(0).toUpperCase();
-
- // Fill table: Excel data first, then sessionStorage fallback, then "-"
- document.getElementById("tdLrn").textContent = found?.lrn || sessionStorage.getItem("studentLrn") || "-";
- document.getElementById("tdName").textContent = found?.name || displayName;
- document.getElementById("tdGrade").textContent = found?.grade || sessionStorage.getItem("studentGrade") || "-";
- document.getElementById("tdSection").textContent = found?.section || sessionStorage.getItem("studentSection") || "-";
- document.getElementById("tdTrack").textContent = found?.track || sessionStorage.getItem("studentTrack") || "-";
- document.getElementById("tdBirth").textContent = found?.birth || sessionStorage.getItem("studentBirth") || "-";
- document.getElementById("tdAddress").textContent = found?.address || sessionStorage.getItem("studentAddress") || "-";
- document.getElementById("tdContact").textContent = found?.contact || sessionStorage.getItem("studentContact") || "-";
- document.getElementById("tdEmail").textContent = found?.email || sessionStorage.getItem("studentEmail") || "-";
- document.getElementById("tdParentName").textContent = found?.parentName || sessionStorage.getItem("parentName") || "-";
- document.getElementById("tdParentContact").textContent = found?.parentContact || sessionStorage.getItem("parentContact") || "-";
- document.getElementById("profileTrack").textContent=(found?.grade || "-")+" - "+(found?.section || "-");
+ const n=sessionStorage.getItem("studentName")||"John Rey Balasta";
+ document.getElementById("sideStudentName").textContent=n.toUpperCase()+"!"; document.getElementById("profileFullName").textContent=n.toUpperCase(); document.getElementById("avatarInitial").textContent=n.trim().charAt(0).toUpperCase();
+ document.getElementById("tdLrn").textContent=sessionStorage.getItem("studentLrn")||"-"; document.getElementById("tdName").textContent=n; document.getElementById("tdGrade").textContent=sessionStorage.getItem("studentGrade")||"-"; document.getElementById("tdSection").textContent=sessionStorage.getItem("studentSection")||"-"; document.getElementById("tdTrack").textContent=sessionStorage.getItem("studentTrack")||"-"; document.getElementById("tdBirth").textContent=sessionStorage.getItem("studentBirth")||"-"; document.getElementById("tdAddress").textContent=sessionStorage.getItem("studentAddress")||"-"; document.getElementById("tdContact").textContent=sessionStorage.getItem("studentContact")||"-"; document.getElementById("tdEmail").textContent=sessionStorage.getItem("studentEmail")||"-"; document.getElementById("tdParentName").textContent=sessionStorage.getItem("parentName")||"-"; document.getElementById("tdParentContact").textContent=sessionStorage.getItem("parentContact")||"-"; document.getElementById("profileTrack").textContent=(sessionStorage.getItem("studentTrack")||"Track")+" - "+(sessionStorage.getItem("studentGrade")||"Grade Level");
 });
 </script>
 </body>
